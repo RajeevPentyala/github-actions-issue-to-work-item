@@ -289,7 +289,18 @@ async function update(vm, workItem) {
       path: "/fields/System.Title",
       value: vm.title + " (GitHub Issue #" + vm.number + ")",
     });
-  }
+    }
+
+    if (
+        workItem.fields["System.IterationPath"] !=
+        `${vm.env.ado_iteration_path})`
+    ) {
+        patchDocument.push({
+            op: "add",
+            path: "/fields/System.IterationPath",
+            value: vm.env.ado_iteration_path,
+        });
+    }
 
   if (workItem.fields["System.Description"] != html || workItem.fields["Microsoft.VSTS.TCM.ReproSteps"] != html ) {
     patchDocument.push(
@@ -562,7 +573,7 @@ async function find(vm) {
   if (workItem != null) {
     try {
         var result = await client.getWorkItem(workItem.id, null, null, 4);
-        console.log('client.getWorkItem result');
+        console.log('Printing client.getWorkItem result');
         console.log(result);
       return result;
     } catch (error) {
