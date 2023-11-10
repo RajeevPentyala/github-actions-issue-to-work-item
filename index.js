@@ -516,7 +516,7 @@ async function find(vm) {
 
   let wiql = {
     query:
-      "SELECT [System.Id], [System.WorkItemType], [System.Description], [System.Title], [System.AssignedTo], [System.State], [System.Tags] FROM workitems WHERE [System.TeamProject] = @project AND [System.Title] CONTAINS '(GitHub Issue #" +
+      "SELECT [System.Id], [System.WorkItemType], [System.Description], [System.Title], [System.AssignedTo], [System.State], [System.Tags], [System.IterationPath], [System.AreaPath] FROM workitems WHERE [System.TeamProject] = @project AND [System.Title] CONTAINS '(GitHub Issue #" +
       vm.number +
       ")' AND [System.Tags] CONTAINS 'GitHub Issue' AND [System.Tags] CONTAINS '" +
       vm.repository +
@@ -561,7 +561,9 @@ async function find(vm) {
 
   if (workItem != null) {
     try {
-      var result = await client.getWorkItem(workItem.id, null, null, 4);
+        var result = await client.getWorkItem(workItem.id, null, null, 4);
+        console.log('client.getWorkItem result');
+        console.log(result);
       return result;
     } catch (error) {
       console.log("Error: getWorkItem failure");
