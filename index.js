@@ -10,9 +10,6 @@ main();
 
 async function main() {
     if (debug) console.log('WARNING! You are in debug mode');
-
-    console.log('Hello');
-  
   try {
     const context = github.context;
     const env = process.env;
@@ -591,8 +588,10 @@ async function find(vm) {
   if (workItem != null) {
     try {
         var result = await client.getWorkItem(workItem.id, null, null, 4);
-        console.log('Printing client.getWorkItem result');
-        console.log(result);
+        if (vm.env.logLevel >= 300) {
+            console.log('Printing client.getWorkItem result');
+            console.log(result);
+        }
       return result;
     } catch (error) {
       console.log("Error: getWorkItem failure");
