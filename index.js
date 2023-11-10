@@ -292,14 +292,32 @@ async function update(vm, workItem) {
     }
 
     if (
-        workItem.fields["System.IterationPath"] !=
-        `${vm.env.ado_iteration_path})`
+        workItem.fields["System.IterationPath"] !==
+        `${vm.env.iterationPath}`
     ) {
+        console.log(`vm Iteration Path: ${vm.env.iterationPath} not same as work item path: ${workItem.fields["System.IterationPath"]}`);
         patchDocument.push({
             op: "add",
             path: "/fields/System.IterationPath",
-            value: vm.env.ado_iteration_path,
+            value: vm.env.iterationPath,
         });
+    } else {
+        console.log(`vm Iteration Path: ${vm.env.iterationPath} same as work item path: ${workItem.fields["System.IterationPath"]}`);
+    }
+
+    if (
+        workItem.fields["System.AreaPath"] !==
+        `${vm.env.areaPath}`
+    ) {
+        console.log(`vm Area Path: ${vm.env.areaPath} not same as work item path: ${workItem.fields["System.AreaPath"]}`);
+        patchDocument.push({
+            op: "add",
+            path: "/fields/System.AreaPath",
+            value: vm.env.areaPath,
+        });
+    }
+    else {
+        console.log(`vm Area Path: ${vm.env.areaPath} same as work item path: ${workItem.fields["System.AreaPath"]}`);
     }
 
   if (workItem.fields["System.Description"] != html || workItem.fields["Microsoft.VSTS.TCM.ReproSteps"] != html ) {
@@ -710,7 +728,11 @@ function getValuesFromPayload(payload, env) {
   
   // verbose logging
   if (vm.env.logLevel >= 300) {
-    console.log("Print vm:");
+      console.log("Print area path:");
+      console.log(vm.env.areaPath);
+      console.log("Print iteration path:");
+      console.log(vm.env.iterationPath);
+      console.log("Print vm:");
     console.log(vm);
   }
 
