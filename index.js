@@ -9,7 +9,9 @@ const testPayload = []; // used for debugging, cut and paste payload
 main();
 
 async function main() {
-  if (debug) console.log('WARNING! You are in debug mode');
+    if (debug) console.log('WARNING! You are in debug mode');
+
+    console.log('Hello');
   
   try {
     const context = github.context;
@@ -123,7 +125,10 @@ async function main() {
         break;
       case "transferred":
         console.log("transferred action is not yet implemented");
-        break;
+            break;
+        case "milestoned":
+            workItem != null ? await update(vm, workItem) : "";
+            break;        
       default:
         console.log(`unhandled action: ${vm.action}`);
     }
@@ -669,7 +674,7 @@ function getValuesFromPayload(payload, env) {
 			bypassRules: env.ado_bypassrules != undefined ? env.ado_bypassrules : false,
       logLevel: env.log_level != undefined ? env.log_level : 100
 		}
-	};
+    };
 
   // label is not always part of the payload
   if (payload.label != undefined) {
