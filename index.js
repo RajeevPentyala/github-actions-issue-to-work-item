@@ -540,14 +540,19 @@ async function find(vm) {
 
   let teamContext = { project: vm.env.project };
 
-  let wiql = {
-    query:
-      "SELECT [System.Id], [System.WorkItemType], [System.Description], [System.Title], [System.AssignedTo], [System.State], [System.Tags], [System.IterationPath], [System.AreaPath] FROM workitems WHERE [System.TeamProject] = @project AND [System.Title] CONTAINS '(GitHub Issue #" +
-      vm.number +
-      ")' AND [System.Tags] CONTAINS 'GitHub Issue' AND [System.Tags] CONTAINS '" +
-      vm.repository +
-      "'",
-  };
+  //let wiql = {
+  //  query:
+  //    "SELECT [System.Id], [System.WorkItemType], [System.Description], [System.Title], [System.AssignedTo], [System.State], [System.Tags], [System.IterationPath], [System.AreaPath] FROM workitems WHERE [System.TeamProject] = @project AND [System.Title] CONTAINS '(GitHub Issue #" +
+  //    vm.number +
+  //    ")' AND [System.Tags] CONTAINS 'GitHub Issue' AND [System.Tags] CONTAINS '" +
+  //    vm.repository +
+  //    "'",
+  //};
+
+    // Define the WIQL query
+    let wiql = {
+        query: `SELECT [System.AreaPath], [System.IterationPath] FROM workitems WHERE [System.TeamProject] = @project`,
+    };
 
   // verbose logging
   if (vm.env.logLevel >= 300) {
@@ -556,7 +561,19 @@ async function find(vm) {
   }
 
   try {
-    queryResult = await client.queryByWiql(wiql, teamContext);
+      queryResult = await client.queryByWiql(wiql, teamContext);
+
+      // Access and print AreaPath and IterationPath from the response
+      const workItems = queryResult.workItems;
+      if (workItems && workItems.length > 0) {
+          const areaPaths = workItems.map((wi) => wi.fields['System.AreaPath']);
+          const iterationPaths = workItems.map((wi) => wi.fields['System.IterationPath']);
+
+          console.log('Area Paths:', areaPaths);
+          console.log('Iteration Paths:', iterationPaths);
+      } else {
+          console.log('No work items found with the specified query.');
+      }      
 
     // verbose logging
     if (vm.env.logLevel >= 300) {
