@@ -534,7 +534,36 @@ async function unlabel(vm, workItem) {
       path: "/fields/System.Tags",
       value: res,
     });
-  }
+    }
+
+    if (
+        workItem.fields["System.IterationPath"] !==
+        `${vm.env.iterationPath}`
+    ) {
+        console.log(`vm Iteration Path: ${vm.env.iterationPath} not same as work item path: ${workItem.fields["System.IterationPath"]}`);
+        patchDocument.push({
+            op: "add",
+            path: "/fields/System.IterationPath",
+            value: vm.env.iterationPath,
+        });
+    } else {
+        console.log(`vm Iteration Path: ${vm.env.iterationPath} same as work item path: ${workItem.fields["System.IterationPath"]}`);
+    }
+
+    if (
+        workItem.fields["System.AreaPath"] !==
+        `${vm.env.areaPath}`
+    ) {
+        console.log(`vm Area Path: ${vm.env.areaPath} not same as work item path: ${workItem.fields["System.AreaPath"]}`);
+        patchDocument.push({
+            op: "add",
+            path: "/fields/System.AreaPath",
+            value: vm.env.areaPath,
+        });
+    }
+    else {
+        console.log(`vm Area Path: ${vm.env.areaPath} same as work item path: ${workItem.fields["System.AreaPath"]}`);
+    }
 
   // verbose logging
   if (vm.env.logLevel >= 300) {
